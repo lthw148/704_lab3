@@ -27,7 +27,9 @@ public class Controller extends ClockDomain{
   public Signal vacOn = new Signal("vacOn", Signal.OUTPUT);
   public Signal armSource = new Signal("armSource", Signal.OUTPUT);
   public Signal armDest = new Signal("armDest", Signal.OUTPUT);
-  private int S7 = 1;
+  private int S130 = 1;
+  private int S42 = 1;
+  private int S8 = 1;
   
   private int[] ends = new int[2];
   private int[] tdone = new int[2];
@@ -39,37 +41,144 @@ public class Controller extends ClockDomain{
     }
     
     RUN: while(true){
-      switch(S7){
+      switch(S130){
         case 0 : 
-          S7=0;
+          S130=0;
           break RUN;
         
         case 1 : 
-          S7=2;
-          S7=2;
+          S130=2;
+          S130=2;
+          S42=0;
           if(request.getprestatus()){//sysj\controller.sysj line: 11, column: 12
             System.out.println("request");//sysj\controller.sysj line: 12, column: 4
+            S8=0;
+            pusherExtend.setPresent();//sysj\controller.sysj line: 15, column: 21
+            currsigs.addElement(pusherExtend);
             active[1]=1;
             ends[1]=1;
             break RUN;
           }
           else {
+            S42=1;
             active[1]=1;
             ends[1]=1;
             break RUN;
           }
         
         case 2 : 
-          if(request.getprestatus()){//sysj\controller.sysj line: 11, column: 12
-            System.out.println("request");//sysj\controller.sysj line: 12, column: 4
-            active[1]=1;
-            ends[1]=1;
-            break RUN;
-          }
-          else {
-            active[1]=1;
-            ends[1]=1;
-            break RUN;
+          switch(S42){
+            case 0 : 
+              switch(S8){
+                case 0 : 
+                  if(pusherExtended.getprestatus()){//sysj\controller.sysj line: 13, column: 11
+                    S8=1;
+                    armSource.setPresent();//sysj\controller.sysj line: 25, column: 21
+                    currsigs.addElement(armSource);
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                  else {
+                    pusherExtend.setPresent();//sysj\controller.sysj line: 15, column: 21
+                    currsigs.addElement(pusherExtend);
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                
+                case 1 : 
+                  if(armAtSource.getprestatus()){//sysj\controller.sysj line: 23, column: 11
+                    S8=2;
+                    vacOn.setPresent();//sysj\controller.sysj line: 34, column: 21
+                    currsigs.addElement(vacOn);
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                  else {
+                    armSource.setPresent();//sysj\controller.sysj line: 25, column: 21
+                    currsigs.addElement(armSource);
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                
+                case 2 : 
+                  if(WPgripped.getprestatus()){//sysj\controller.sysj line: 32, column: 11
+                    S8=3;
+                    vacOn.setPresent();//sysj\controller.sysj line: 43, column: 6
+                    currsigs.addElement(vacOn);
+                    armDest.setPresent();//sysj\controller.sysj line: 44, column: 21
+                    currsigs.addElement(armDest);
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                  else {
+                    vacOn.setPresent();//sysj\controller.sysj line: 34, column: 21
+                    currsigs.addElement(vacOn);
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                
+                case 3 : 
+                  if(armAtDest.getprestatus()){//sysj\controller.sysj line: 41, column: 11
+                    S8=4;
+                    pusherExtend.setPresent();//sysj\controller.sysj line: 53, column: 21
+                    currsigs.addElement(pusherExtend);
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                  else {
+                    vacOn.setPresent();//sysj\controller.sysj line: 43, column: 6
+                    currsigs.addElement(vacOn);
+                    armDest.setPresent();//sysj\controller.sysj line: 44, column: 21
+                    currsigs.addElement(armDest);
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                
+                case 4 : 
+                  if(!WPgripped.getprestatus()){//sysj\controller.sysj line: 51, column: 11
+                    S42=1;
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                  else {
+                    pusherExtend.setPresent();//sysj\controller.sysj line: 53, column: 21
+                    currsigs.addElement(pusherExtend);
+                    active[1]=1;
+                    ends[1]=1;
+                    break RUN;
+                  }
+                
+              }
+              break;
+            
+            case 1 : 
+              S42=1;
+              S42=0;
+              if(request.getprestatus()){//sysj\controller.sysj line: 11, column: 12
+                System.out.println("request");//sysj\controller.sysj line: 12, column: 4
+                S8=0;
+                pusherExtend.setPresent();//sysj\controller.sysj line: 15, column: 21
+                currsigs.addElement(pusherExtend);
+                active[1]=1;
+                ends[1]=1;
+                break RUN;
+              }
+              else {
+                S42=1;
+                active[1]=1;
+                ends[1]=1;
+                break RUN;
+              }
+            
           }
         
       }
