@@ -27,7 +27,7 @@ public class Controller extends ClockDomain{
   public Signal vacOn = new Signal("vacOn", Signal.OUTPUT);
   public Signal armSource = new Signal("armSource", Signal.OUTPUT);
   public Signal armDest = new Signal("armDest", Signal.OUTPUT);
-  private int S0 = 1;
+  private int S13 = 1;
   
   private int[] ends = new int[2];
   private int[] tdone = new int[2];
@@ -39,18 +39,39 @@ public class Controller extends ClockDomain{
     }
     
     RUN: while(true){
-      switch(S0){
+      switch(S13){
         case 0 : 
-          S0=0;
+          S13=0;
           break RUN;
         
         case 1 : 
-          S0=2;
-          S0=2;
-          active[1]=0;
-          ends[1]=0;
-          S0=0;
-          break RUN;
+          S13=2;
+          S13=2;
+          System.out.println("request");//sysj\controller.sysj line: 9, column: 2
+          if(request.getprestatus()){//sysj\controller.sysj line: 11, column: 12
+            System.out.println("request");//sysj\controller.sysj line: 12, column: 4
+            active[1]=1;
+            ends[1]=1;
+            break RUN;
+          }
+          else {
+            active[1]=1;
+            ends[1]=1;
+            break RUN;
+          }
+        
+        case 2 : 
+          if(request.getprestatus()){//sysj\controller.sysj line: 11, column: 12
+            System.out.println("request");//sysj\controller.sysj line: 12, column: 4
+            active[1]=1;
+            ends[1]=1;
+            break RUN;
+          }
+          else {
+            active[1]=1;
+            ends[1]=1;
+            break RUN;
+          }
         
       }
     }
