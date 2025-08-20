@@ -7,58 +7,105 @@ Controller(
 ->{
 /* TODO: Write control-logic */
 	
-	loop{
-		present (request){
-			System.out.println("request");
-			abort (pusherExtended) {
-				while (true) {
-                    emit pusherExtend;
-                    pause;
-
-                }
+	signal automatic;
+	signal manual;
+	
+	{
+		loop{
+			present (automatic){
+				abort (pusherExtended) {
+					while (true) {
+	                    emit pusherExtend;
+	                    pause;
+	
+	                }
+				}
+				
+				abort (armAtSource) {
+					while (true) {
+	                    emit armSource;
+	                    pause;
+	                }
+				}
+				
+				
+				
+				abort (WPgripped) {
+					while (true) {
+	                    emit vacOn;
+	                    pause;
+	                }
+				}
+				
+				
+				
+				abort (armAtDest) {
+					loop{
+						emit vacOn;
+	                    emit armDest;
+	                    pause;
+					}
+				}
+				
+				
+				
+				abort (!WPgripped) {
+					while (true) {
+	                    emit pusherExtend;
+	                    pause;
+	                }
+	            }
+				
+				
+				
 			}
-			
-			
-			
-			abort (armAtSource) {
-				while (true) {
-                    emit armSource;
-                    pause;
-                }
-			}
-			
-			
-			
-			abort (WPgripped) {
-				while (true) {
-                    emit vacOn;
-                    pause;
-                }
-			}
-			
-			
-			
-			abort (armAtDest) {
-				loop{
+			pause;
+		}
+	}
+	||
+	{
+		loop{
+			present (manual){
+				present (pusherExtendM){
+					emit pusherExtend;
+					System.out.println("pusherExtendM");
+				}
+				
+				present (vacOnM){
 					emit vacOn;
-                    emit armDest;
-                    pause;
+					System.out.println("vacOn");
+				}
+				present (armSourceM){
+					emit armSource;
+					System.out.println("armSourceM");
+					
+				}
+				present (armDestM){
+					System.out.println("armDest");
+					emit armDest;
+					
 				}
 			}
-			
-			
-			
-			abort (!WPgripped) {
-				while (true) {
-                    emit pusherExtend;
-                    pause;
-                }
-            }
-			
-			
-			
+			pause;
 		}
-		pause;
+	}
+	||
+	{
+		Integer var_mode;
+		loop{
+			present (mode){
+				var_mode = #mode;
+				System.out.println("varMode"+ var_mode);
+				
+				if (var_mode == 0) {
+					emit automatic;
+				} else if(var_mode == 1) {
+					emit manual;
+				}
+			}
+			pause;
+		}
+		
 	}
 }
 
