@@ -14,6 +14,18 @@ Controller(
 		loop{
 			present (automatic){
 				present (request){
+					
+					abort (armAtDest) {
+						while (true) {
+		                    emit armDest;
+		                    pause;
+		
+		                }
+					}
+					
+					pause;
+					
+					
 					abort (pusherExtended) {
 						while (true) {
 		                    emit pusherExtend;
@@ -22,14 +34,30 @@ Controller(
 		                }
 					}
 					
+					pause;
+				
+					
+					abort (pusherRetracted){
+						while (true) {
+		                    pause;
+		
+		                }
+					}
+					
+					System.out.println("retracted");
+					
+					
+					pause;
+					
 					abort (armAtSource) {
 						while (true) {
 		                    emit armSource;
 		                    pause;
+		
 		                }
 					}
 					
-					
+					pause;
 					
 					abort (WPgripped) {
 						while (true) {
@@ -38,24 +66,30 @@ Controller(
 		                }
 					}
 					
-					
-					
 					abort (armAtDest) {
-						loop{
-							emit vacOn;
-		                    emit armDest;
+						while (true) {
+		                    {emit vacOn;} || {emit armDest;}
 		                    pause;
+		                }
+					}
+					
+					pause;
+					
+					abort (!WPgripped){
+						while (true) {
+							pause;
 						}
 					}
 					
+					pause;
 					
-					
-					abort (!WPgripped) {
+					abort (armAtSource) {
 						while (true) {
-		                    emit pusherExtend;
+		                    emit armSource;
 		                    pause;
 		                }
-		            }
+					}
+					
 				}
 				
 				
