@@ -13,48 +13,50 @@ Controller(
 	{
 		loop{
 			present (automatic){
-				abort (pusherExtended) {
-					while (true) {
-	                    emit pusherExtend;
-	                    pause;
-	
-	                }
-				}
-				
-				abort (armAtSource) {
-					while (true) {
-	                    emit armSource;
-	                    pause;
-	                }
-				}
-				
-				
-				
-				abort (WPgripped) {
-					while (true) {
-	                    emit vacOn;
-	                    pause;
-	                }
-				}
-				
-				
-				
-				abort (armAtDest) {
-					loop{
-						emit vacOn;
-	                    emit armDest;
-	                    pause;
+				present (request){
+					abort (pusherExtended) {
+						while (true) {
+		                    emit pusherExtend;
+		                    pause;
+		
+		                }
 					}
+					
+					abort (armAtSource) {
+						while (true) {
+		                    emit armSource;
+		                    pause;
+		                }
+					}
+					
+					
+					
+					abort (WPgripped) {
+						while (true) {
+		                    emit vacOn;
+		                    pause;
+		                }
+					}
+					
+					
+					
+					abort (armAtDest) {
+						loop{
+							emit vacOn;
+		                    emit armDest;
+		                    pause;
+						}
+					}
+					
+					
+					
+					abort (!WPgripped) {
+						while (true) {
+		                    emit pusherExtend;
+		                    pause;
+		                }
+		            }
 				}
-				
-				
-				
-				abort (!WPgripped) {
-					while (true) {
-	                    emit pusherExtend;
-	                    pause;
-	                }
-	            }
 				
 				
 				
